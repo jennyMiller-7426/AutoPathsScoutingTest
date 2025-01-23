@@ -2,17 +2,27 @@
 const canvas = document.getElementById("drawingCanvas");
 const ctx = canvas.getContext("2d");
 
+// Load the background image
+const backgroundImage = new Image();
+backgroundImage.src = "background.jpg"; // Replace with your image file name
+
+// Draw the background image when it loads
+backgroundImage.onload = () => {
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+};
+
 // Variables for drawing
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Drawing functions
+// Start drawing
 function startDrawing(e) {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
 }
 
+// Draw on the canvas
 function draw(e) {
     if (!isDrawing) return;
     ctx.strokeStyle = "#ff0000";
@@ -27,13 +37,15 @@ function draw(e) {
     [lastX, lastY] = [e.offsetX, e.offsetY];
 }
 
+// Stop drawing
 function stopDrawing() {
     isDrawing = false;
 }
 
-// Clear canvas
+// Clear canvas (and redraw the background image)
 document.getElementById("clearCanvas").addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // Redraw the background
 });
 
 // Submit drawing
@@ -54,6 +66,7 @@ document.getElementById("submitDrawing").addEventListener("click", () => {
     }).then(() => {
         alert("Drawing submitted successfully!");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // Reset canvas
     }).catch(err => {
         alert("Submission failed: " + err.message);
     });
